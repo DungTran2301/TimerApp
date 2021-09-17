@@ -1,10 +1,11 @@
-package com.dungtran.alarmclock
+package com.dungtran.alarmclock.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.dungtran.alarmclock.R
 
 
 class AlarmFragment : Fragment() {

@@ -1,22 +1,18 @@
-package com.dungtran.alarmclock
+package com.dungtran.alarmclock.ui
 
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.NumberPicker.OnValueChangeListener
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.dungtran.alarmclock.R
 import com.dungtran.alarmclock.databinding.FragmentCountDownBinding
 import com.dungtran.alarmclock.model.CountDownViewModel
-import com.dungtran.alarmclock.model.CountUpViewModel
 import com.google.android.material.snackbar.Snackbar
-import java.util.*
-import kotlin.math.roundToInt
 
 class CountDownFragment : Fragment() {
     lateinit var binding: FragmentCountDownBinding
@@ -39,6 +35,7 @@ class CountDownFragment : Fragment() {
 
         countDownViewModel.timeDisplay.observe(viewLifecycleOwner, androidx.lifecycle.Observer{
             binding.tvTimeRunning.text = it
+            if (it == "00:00:00") exitTimer()
         })
 
         countDownViewModel.isTimeOut.observe(viewLifecycleOwner, androidx.lifecycle.Observer{

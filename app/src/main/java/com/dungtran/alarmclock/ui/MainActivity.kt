@@ -1,13 +1,10 @@
-package com.dungtran.alarmclock
+package com.dungtran.alarmclock.ui
 
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.dungtran.alarmclock.R
 import com.dungtran.alarmclock.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

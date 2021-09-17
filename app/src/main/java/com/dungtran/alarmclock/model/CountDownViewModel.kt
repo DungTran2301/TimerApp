@@ -1,15 +1,22 @@
 package com.dungtran.alarmclock.model
 
+import android.app.Application
+import android.content.Intent
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.dungtran.alarmclock.service.CountDownService
 import java.util.*
 import kotlin.math.roundToInt
 
-class CountDownViewModel : ViewModel() {
+class CountDownViewModel(application: Application) : AndroidViewModel(application) {
     private var timer = Timer()
     private var timerTask: TimerTask? = null
     private var time = 0.0
+
+    private val context by lazy {
+        application.applicationContext
+    }
 
     private val _timeDisplay = MutableLiveData<String>()
     val timeDisplay: LiveData<String> = _timeDisplay
@@ -26,11 +33,14 @@ class CountDownViewModel : ViewModel() {
                 getTimerText()
             }
         }
-        timer.scheduleAtFixedRate(timerTask, 0, 1000)
+        timer.scheduleAtFixedRate(timerTask, 0, 100)
     }
 
     private fun getTimerText() {
-        if(time <= 0) taskComplete()
+        if(time <= 0) {
+            taskComplete()
+            createService()
+        }
         val rounded = time.roundToInt()
         if (rounded <= 0) _isTimeOut.postValue(true)
         val seconds = rounded % 60
@@ -57,6 +67,16 @@ class CountDownViewModel : ViewModel() {
             taskComplete()
             time = 0.0
         }
+    }
+
+    private fun createService() {
+        var intent = Intent(context, CountDownService::class.java)
+        context.startService(intent)
+    }
+
+    private fun deleteService() {
+        var intent = Intent(context, CountDownService::class.java)
+        context.stopService(intent)
     }
 
 }
