@@ -8,7 +8,7 @@
         android:id="@+id/action_alarms"
         android:name="com.dungtran.alarmclock.ui.AlarmFragment"
         android:label="fragment_alarm"
-        tools:layout="@layout/fragment_alarm" >
+        tools:layout="@layout/fragment_alarm">
         <action
             android:id="@+id/action_alarmFragment_to_countUpFragment"
             app:destination="@id/action_count_up" />
@@ -20,7 +20,7 @@
         android:id="@+id/action_count_up"
         android:name="com.dungtran.alarmclock.ui.CountUpFragment"
         android:label="fragment_count_up"
-        tools:layout="@layout/fragment_count_up" >
+        tools:layout="@layout/fragment_count_up">
         <action
             android:id="@+id/action_countUpFragment_to_countDownFragment"
             app:destination="@id/action_count_down" />
@@ -32,7 +32,7 @@
         android:id="@+id/action_count_down"
         android:name="com.dungtran.alarmclock.ui.CountDownFragment"
         android:label="fragment_count_down"
-        tools:layout="@layout/fragment_count_down" >
+        tools:layout="@layout/fragment_count_down">
         <action
             android:id="@+id/action_countDownFragment_to_countUpFragment"
             app:destination="@id/action_count_up" />

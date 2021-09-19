@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dungtran.alarmclock">
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:name=".service.CountDownNotification"
+        android:name=".notification.CountDownNotification"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AlarmClock">
+        <activity
+            android:name=".ui.RingActivity"
+            android:label="@string/title_activity_ring"
+            android:theme="@style/Theme.AlarmClock.NoActionBar"></activity>
         <activity
             android:name=".ui.MainActivity"
             android:label="@string/app_name"
@@ -22,8 +27,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".service.CountDownService"/>
-        <receiver android:name=".service.NotificationReceive"/>
+
+        <service android:name=".service.CountDownService" />
+
+        <receiver android:name=".broadcastreceiver.NotificationReceive" />
     </application>
 
 </manifest>

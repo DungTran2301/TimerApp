@@ -7,6 +7,7 @@
     tools:context=".ui.AlarmFragment">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcv_alarms"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

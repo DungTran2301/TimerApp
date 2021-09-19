@@ -1,8 +1,9 @@
-package com.dungtran.alarmclock.service
+package com.dungtran.alarmclock.broadcastreceiver
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.dungtran.alarmclock.service.CountDownService
 
 class NotificationReceive : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {

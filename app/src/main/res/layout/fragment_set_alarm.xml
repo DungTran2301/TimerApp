@@ -62,11 +62,11 @@
                 android:textSize="15dp" />
 
             <Button
-                android:id="@+id/btn_calendar"
+                android:id="@+id/btn_recurring"
                 style="@style/Widget.MaterialComponents.Button.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ngày"
+                android:text="Lặp lại"
                 android:textColor="@color/blue_light"
                 android:textStyle="normal"
                 app:backgroundTint="@color/no_color"
@@ -83,8 +83,10 @@
             android:timePickerMode="spinner" />
 
         <TextView
+            android:id="@+id/tv_recurrence"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:text="Lặp lại"
             android:textColor="@color/black"
             android:layout_marginLeft="30dp"
@@ -92,8 +94,10 @@
             android:layout_marginTop="10dp"
             android:textSize="20sp"/>
         <LinearLayout
+            android:id="@+id/lnl_checkbox_day"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:orientation="horizontal"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp">

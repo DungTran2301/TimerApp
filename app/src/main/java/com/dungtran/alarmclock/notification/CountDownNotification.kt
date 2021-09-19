@@ -1,4 +1,4 @@
-package com.dungtran.alarmclock.service
+package com.dungtran.alarmclock.notification
 
 import android.app.Application
 import android.app.NotificationChannel
@@ -17,7 +17,8 @@ class CountDownNotification : Application() {
 
     private fun createChannelNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId,
+            val channel = NotificationChannel(
+                channelId,
                 "Channel Service",
                 NotificationManager.IMPORTANCE_DEFAULT)
             val manager: NotificationManager = getSystemService(NotificationManager::class.java)
