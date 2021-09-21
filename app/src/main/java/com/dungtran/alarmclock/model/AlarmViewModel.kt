@@ -1,29 +1,27 @@
 package com.dungtran.alarmclock.model
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import android.content.Context
+import android.util.Log
+import androidx.lifecycle.*
 import com.dungtran.alarmclock.alarmdata.Alarm
+import com.dungtran.alarmclock.alarmdata.AlarmDatabase
 import com.dungtran.alarmclock.alarmdata.AlarmRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AlarmViewModel(application: Application) : AndroidViewModel(application) {
-    private var _allData: MutableLiveData<ArrayList<Alarm>> = MutableLiveData()
-    val allData: LiveData<ArrayList<Alarm>> = _allData
+class AlarmViewModel(private var alarmRepository: AlarmRepository) : ViewModel() {
+//    private var _allData: MutableLiveData<List<Alarm>> = alarmRepository.allData as MutableLiveData<List<Alarm>>
+    val allData = liveData(Dispatchers.IO) {
+        emitSource(alarmRepository.getAllData())
+    }
 
     var position = 0
 
-    private var alarmRepository: AlarmRepository = AlarmRepository(application)
-
-    init {
-        _allData = alarmRepository.allData as MutableLiveData<ArrayList<Alarm>>
-    }
 
     fun update(newAlarm :Alarm){
-        _allData.value?.set(position, newAlarm)
-        viewModelScope.launch {
+//        _allData.value?.get(position) = newAlarm
+        viewModelScope.launch(Dispatchers.IO) {
             updateAlarm(newAlarm)
         }
     }
@@ -35,7 +33,33 @@ class AlarmViewModel(application: Application) : AndroidViewModel(application) {
     suspend fun insertAlarm(alarm: Alarm) {
         alarmRepository.insertAlarm(alarm)
     }
+    init {
+
+//        val testAlarm = Alarm(12, 45, true, false, false, false, false, false, false, false, false)
+//        viewModelScope.launch(Dispatchers.IO) {
+//            alarmRepository.insertAlarm(testAlarm)
+//                Log.d("AlarmViewmodel: ", " ${alarmRepository.getAllData().value?.size}")
+//        }
+    }
+
+    companion object{
+        private var instance: AlarmViewModel? = null
+        fun getInstance(alarmRepository: AlarmRepository): AlarmViewModel{
+            if(instance == null){
+                instance = AlarmViewModel(alarmRepository)
+            }
+            return instance!!
+        }
+    }
+
+}
 
 
-
+class AlarmLiveDataFactory(context: Context) : ViewModelProvider.Factory {
+    private val alarmDao = AlarmDatabase.getDatabase(context).alarmDAO()
+    private val alarmRepository = AlarmRepository(alarmDao)
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        return AlarmViewModel.getInstance(alarmRepository) as T
+    }
 }

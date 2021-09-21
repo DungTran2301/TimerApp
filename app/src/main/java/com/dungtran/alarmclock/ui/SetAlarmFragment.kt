@@ -2,6 +2,7 @@ package com.dungtran.alarmclock.ui
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,26 +10,27 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.dungtran.alarmclock.R
 import com.dungtran.alarmclock.alarmdata.Alarm
 import com.dungtran.alarmclock.databinding.FragmentSetAlarmBinding
+import com.dungtran.alarmclock.model.AlarmLiveDataFactory
 import com.dungtran.alarmclock.model.AlarmViewModel
 import kotlinx.coroutines.launch
 
 class SetAlarmFragment : Fragment() {
     lateinit var binding: FragmentSetAlarmBinding
-    lateinit var viewModel: AlarmViewModel
+    private val viewModel:  AlarmViewModel by viewModels { AlarmLiveDataFactory(requireContext()) }
     var isRecurring = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSetAlarmBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(requireActivity()).get(AlarmViewModel::class.java)
-        return inflater.inflate(R.layout.fragment_set_alarm, container, false)
+        return binding.root
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -39,52 +41,55 @@ class SetAlarmFragment : Fragment() {
             onRecurringClick()
         }
 
+        binding.btnExitSetAlarm.setOnClickListener {
+            Log.d("SetAlarmFragment: ", "cn button exit click")
+            findNavController().navigate(R.id.action_setAlarmFragment_to_action_alarms)
+        }
 
-        if (viewModel.position == -1) {
-            binding.btnSaveSetAlarm.setOnClickListener {
+        binding.btnSaveSetAlarm.setOnClickListener {
+            Log.d("set alarm fragment: ", "save click")
+            if (viewModel.position == -1) {
+                Log.d("set alarm fragment: ", "save new alarm")
                 if (isRecurring) {
                     if (!checkRecurrence()) {
                         Toast.makeText(context, "Bạn chưa chọn ngày!", Toast.LENGTH_LONG).show()
-                    }
-                    else
+                    } else
                         addAlarm()
-                }
-                else
+                } else
                     addAlarm()
             }
-        }
-        else {
-            val updateAlarm = viewModel.allData.value?.get(viewModel.position)
-            binding.tvDisplayTime.text = updateAlarm?.getRecurrenceText()
-            isRecurring = !updateAlarm!!.isRecurrence
-            if (updateAlarm!!.isRecurrence) {
-                binding.cbMon.isChecked = updateAlarm.monday
-                binding.cbTue.isChecked = updateAlarm.tuesday
-                binding.cbWed.isChecked = updateAlarm.wednesday
-                binding.cbThu.isChecked = updateAlarm.thursday
-                binding.cbFri.isChecked = updateAlarm.friday
-                binding.cbSat.isChecked = updateAlarm.saturday
-                binding.cbSun.isChecked = updateAlarm.sunday
-            }
+            findNavController().navigate(R.id.action_setAlarmFragment_to_action_alarms)
 
-            viewModel.update(updateAlarm!!)
+//            else {
+//                val updateAlarm = viewModel.allData.value!![viewModel.position]
+//                binding.tvDisplayTime.text = updateAlarm.getRecurrenceText()
+//                isRecurring = if (updateAlarm.isRecurrence) false else true
+//                if (updateAlarm.isRecurrence) {
+//                    binding.cbMon.isChecked = updateAlarm.monday
+//                    binding.cbTue.isChecked = updateAlarm.tuesday
+//                    binding.cbWed.isChecked = updateAlarm.wednesday
+//                    binding.cbThu.isChecked = updateAlarm.thursday
+//                    binding.cbFri.isChecked = updateAlarm.friday
+//                    binding.cbSat.isChecked = updateAlarm.saturday
+//                    binding.cbSun.isChecked = updateAlarm.sunday
+//                }
+//
+//                viewModel.update(updateAlarm)
+//            }
         }
 
-        binding.btnExitSetAlarm.setOnClickListener {
-//            findNavController().navigate(R.id.action_setAlarmFragment_to_action_alarms)
-        }
 
     }
     private fun onRecurringClick() {
-        if (isRecurring) {
-            isRecurring = false
+        if (!isRecurring) {
+            isRecurring = true
             binding.btnRecurring.text = "Không lặp"
             binding.btnRecurring.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
             binding.lnlCheckboxDay.visibility = View.VISIBLE
             binding.tvRecurrence.visibility = View.VISIBLE
         }
         else {
-            isRecurring = true
+            isRecurring = false
             binding.btnRecurring.text = "Lặp lại"
             binding.btnRecurring.setTextColor(ContextCompat.getColor(requireContext(), R.color.blue_light))
             binding.lnlCheckboxDay.visibility = View.GONE

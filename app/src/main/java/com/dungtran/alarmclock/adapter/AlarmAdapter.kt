@@ -27,7 +27,11 @@ class AlarmAdapter(
 //    interface OnAlarmItemClicklistener {
 //        fun OnItemClick(item: Alarm, position: Int)
 //    }
-    var listAlarms = ArrayList<Alarm>()
+    var listAlarms: List<Alarm> = listOf()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemAlarmBinding.inflate(LayoutInflater.from(parent.context), parent, false)

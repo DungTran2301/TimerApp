@@ -10,34 +10,26 @@
         android:label="fragment_alarm"
         tools:layout="@layout/fragment_alarm">
         <action
-            android:id="@+id/action_alarmFragment_to_countUpFragment"
-            app:destination="@id/action_count_up" />
-        <action
-            android:id="@+id/action_alarmFragment_to_countDownFragment"
-            app:destination="@id/action_count_down" />
+            android:id="@+id/action_action_alarms_to_setAlarmFragment"
+            app:destination="@id/setAlarmFragment" />
     </fragment>
     <fragment
         android:id="@+id/action_count_up"
         android:name="com.dungtran.alarmclock.ui.CountUpFragment"
         android:label="fragment_count_up"
-        tools:layout="@layout/fragment_count_up">
-        <action
-            android:id="@+id/action_countUpFragment_to_countDownFragment"
-            app:destination="@id/action_count_down" />
-        <action
-            android:id="@+id/action_countUpFragment_to_alarmFragment"
-            app:destination="@id/action_alarms" />
-    </fragment>
+        tools:layout="@layout/fragment_count_up"/>
     <fragment
         android:id="@+id/action_count_down"
         android:name="com.dungtran.alarmclock.ui.CountDownFragment"
         android:label="fragment_count_down"
-        tools:layout="@layout/fragment_count_down">
+        tools:layout="@layout/fragment_count_down"/>
+    <fragment
+        android:id="@+id/setAlarmFragment"
+        android:name="com.dungtran.alarmclock.ui.SetAlarmFragment"
+        android:label="fragment_set_alarm"
+        tools:layout="@layout/fragment_set_alarm" >
         <action
-            android:id="@+id/action_countDownFragment_to_countUpFragment"
-            app:destination="@id/action_count_up" />
-        <action
-            android:id="@+id/action_countDownFragment_to_alarmFragment"
+            android:id="@+id/action_setAlarmFragment_to_action_alarms"
             app:destination="@id/action_alarms" />
     </fragment>
 </navigation>

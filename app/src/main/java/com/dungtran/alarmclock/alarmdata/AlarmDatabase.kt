@@ -11,18 +11,20 @@ abstract class AlarmDatabase : RoomDatabase() {
     companion object {
         private const val NAME_DATABASE = "alarm_database"
 
+        @Volatile
         private var INSTANCE: AlarmDatabase? = null
 
         fun getDatabase(context: Context): AlarmDatabase {
             return INSTANCE?: synchronized(this) {
                 val instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        AlarmDatabase::class.java,
-                        NAME_DATABASE
-                ).build()
+                    context.applicationContext,
+                    AlarmDatabase::class.java,
+                    NAME_DATABASE)
+                    .build()
+
+                INSTANCE = instance
                 instance
             }
-
         }
     }
 }
