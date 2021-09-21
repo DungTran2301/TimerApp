@@ -8,7 +8,8 @@ import com.dungtran.alarmclock.alarmdata.Alarm
 import com.dungtran.alarmclock.databinding.ItemAlarmBinding
 
 class AlarmAdapter(
-        private val clickListener: (item: Alarm, position: Int) -> Unit
+        private val clickListener: (item: Alarm, position: Int) -> Unit,
+        private val deleteAlarm: (position: Int) -> Unit
 ) : RecyclerView.Adapter<AlarmAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemAlarmBinding) : RecyclerView.ViewHolder(binding.root){
@@ -17,8 +18,11 @@ class AlarmAdapter(
             binding.tvItemAlarmTime.text = "${alarm.hours} : ${alarm.minutes}"
             binding.tvItemCalender.text = "${alarm.getRecurrenceText()}"
             binding.switchItemAlarmStarted.isChecked = alarm.isStart
-            binding.root.setOnLongClickListener {
+            binding.root.setOnClickListener {
                 clickListener(alarm, position)
+            }
+            binding.root.setOnLongClickListener {
+                deleteAlarm(position)
                 true
             }
         }

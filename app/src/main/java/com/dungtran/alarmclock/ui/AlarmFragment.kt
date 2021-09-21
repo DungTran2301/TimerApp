@@ -9,12 +9,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.dungtran.alarmclock.R
 import com.dungtran.alarmclock.adapter.AlarmAdapter
 import com.dungtran.alarmclock.databinding.FragmentAlarmBinding
 import com.dungtran.alarmclock.model.AlarmLiveDataFactory
 import com.dungtran.alarmclock.model.AlarmViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class AlarmFragment : Fragment() {
@@ -38,12 +41,14 @@ class AlarmFragment : Fragment() {
         binding.fabAddAlarm.setOnClickListener {
             moveToAddAlarm()
         }
-        val adapter = AlarmAdapter{ _, position ->
+        val adapter = AlarmAdapter({ _, position ->
             alarmViewModel.position = position
             findNavController().navigate(R.id.action_action_alarms_to_setAlarmFragment)
-        }
+        },{
+            deleteAlarm(position = it)
+        })
         alarmViewModel.allData.observe(viewLifecycleOwner){
-            Log.d("Alarm Fragment", "onViewCreated: ${it.size}")
+            Log.d("Alarm Fragment", "Size of list Alarm ${it.size}")
             adapter.listAlarms = it
         }
         binding.rcvAlarms.adapter = adapter
@@ -52,5 +57,21 @@ class AlarmFragment : Fragment() {
         alarmViewModel.position = -1
         findNavController().navigate(R.id.action_action_alarms_to_setAlarmFragment)
     }
+    private fun deleteAlarm(position: Int){
+        Log.d("AlarmFragment", "Delete Alarm at $position")
+        binding.layoutDelete.visibility = View.VISIBLE
+        binding.btnCancelDelete.setOnClickListener {
+            binding.layoutDelete.visibility = View.GONE
+        }
+        binding.btnDelete.setOnClickListener {
+            lifecycleScope.launch(Dispatchers.IO){
+                alarmViewModel.deleteAlarm(position)
+            }
+            binding.layoutDelete.visibility = View.GONE
+        }
+
+    }
+
+
 
 }

@@ -13,26 +13,30 @@ import kotlinx.coroutines.launch
 class AlarmViewModel(private var alarmRepository: AlarmRepository) : ViewModel() {
 //    private var _allData: MutableLiveData<List<Alarm>> = alarmRepository.allData as MutableLiveData<List<Alarm>>
     val allData = liveData(Dispatchers.IO) {
+        Log.d("Alarm ViewModel", "emitSource All Data ")
         emitSource(alarmRepository.getAllData())
     }
 
     var position = 0
 
 
-    fun update(newAlarm :Alarm){
+    suspend fun update(newAlarm :Alarm){
 //        _allData.value?.get(position) = newAlarm
-        viewModelScope.launch(Dispatchers.IO) {
-            updateAlarm(newAlarm)
-        }
+        updateAlarm(newAlarm)
     }
 
     suspend fun updateAlarm(alarm: Alarm) {
+        Log.d("Alarm ViewModel ", "updateAlarm")
         alarmRepository.updateAlarm(alarm)
     }
 
     suspend fun insertAlarm(alarm: Alarm) {
         alarmRepository.insertAlarm(alarm)
     }
+    suspend fun deleteAlarm(position: Int){
+        allData.value?.get(position)?.let { alarmRepository.deleteAlarm(it) }
+    }
+
     init {
 
 //        val testAlarm = Alarm(12, 45, true, false, false, false, false, false, false, false, false)

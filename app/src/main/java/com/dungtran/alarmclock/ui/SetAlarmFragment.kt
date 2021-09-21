@@ -19,7 +19,9 @@ import com.dungtran.alarmclock.alarmdata.Alarm
 import com.dungtran.alarmclock.databinding.FragmentSetAlarmBinding
 import com.dungtran.alarmclock.model.AlarmLiveDataFactory
 import com.dungtran.alarmclock.model.AlarmViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SetAlarmFragment : Fragment() {
     lateinit var binding: FragmentSetAlarmBinding
@@ -47,6 +49,7 @@ class SetAlarmFragment : Fragment() {
         }
 
         binding.btnSaveSetAlarm.setOnClickListener {
+
             Log.d("set alarm fragment: ", "save click")
             if (viewModel.position == -1) {
                 Log.d("set alarm fragment: ", "save new alarm")
@@ -58,27 +61,27 @@ class SetAlarmFragment : Fragment() {
                 } else
                     addAlarm()
             }
+            else {
+                val updateAlarm = viewModel.allData.value!![viewModel.position]
+
+                    binding.tvDisplayTime.text = updateAlarm.getRecurrenceText()
+                    isRecurring = !updateAlarm.isRecurrence
+                    if (updateAlarm.isRecurrence) {
+                        binding.cbMon.isChecked = updateAlarm.monday
+                        binding.cbTue.isChecked = updateAlarm.tuesday
+                        binding.cbWed.isChecked = updateAlarm.wednesday
+                        binding.cbThu.isChecked = updateAlarm.thursday
+                        binding.cbFri.isChecked = updateAlarm.friday
+                        binding.cbSat.isChecked = updateAlarm.saturday
+                        binding.cbSun.isChecked = updateAlarm.sunday
+                    }
+                lifecycleScope.launch(Dispatchers.IO){
+                    viewModel.updateAlarm(updateAlarm)
+                }
+            }
             findNavController().navigate(R.id.action_setAlarmFragment_to_action_alarms)
 
-//            else {
-//                val updateAlarm = viewModel.allData.value!![viewModel.position]
-//                binding.tvDisplayTime.text = updateAlarm.getRecurrenceText()
-//                isRecurring = if (updateAlarm.isRecurrence) false else true
-//                if (updateAlarm.isRecurrence) {
-//                    binding.cbMon.isChecked = updateAlarm.monday
-//                    binding.cbTue.isChecked = updateAlarm.tuesday
-//                    binding.cbWed.isChecked = updateAlarm.wednesday
-//                    binding.cbThu.isChecked = updateAlarm.thursday
-//                    binding.cbFri.isChecked = updateAlarm.friday
-//                    binding.cbSat.isChecked = updateAlarm.saturday
-//                    binding.cbSun.isChecked = updateAlarm.sunday
-//                }
-//
-//                viewModel.update(updateAlarm)
-//            }
         }
-
-
     }
     private fun onRecurringClick() {
         if (!isRecurring) {
@@ -122,10 +125,14 @@ class SetAlarmFragment : Fragment() {
                 binding.cbSat.isChecked,
                 binding.cbSun.isChecked
         )
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             viewModel.insertAlarm(alarm)
         }
-        alarm.alarmSchedule(requireContext())
+
+        lifecycleScope.launch(Dispatchers.Default){
+            alarm.alarmSchedule(requireContext())
+        }
+
 
     }
 }
