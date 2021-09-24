@@ -3,9 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/KOTLIN PROJECT/AlarmClock/app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.2703125" />
+        <entry key="..\:/KOTLIN PROJECT/AlarmClock/app/src/main/res/drawable/ic_baseline_delete_24.xml" value="0.2703125" />
+        <entry key="..\:/KOTLIN PROJECT/AlarmClock/app/src/main/res/drawable/ic_baseline_delete_forever_24.xml" value="0.2703125" />
         <entry key="..\:/KOTLIN PROJECT/AlarmClock/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/KOTLIN PROJECT/AlarmClock/app/src/main/res/layout/activity_ring.xml" value="0.264" />
         <entry key="..\:/KOTLIN PROJECT/AlarmClock/app/src/main/res/layout/fragment_alarm.xml" value="0.264" />
+        <entry key="..\:/KOTLIN PROJECT/AlarmClock/app/src/main/res/layout/fragment_count_down.xml" value="0.21145833333333333" />
         <entry key="..\:/KOTLIN PROJECT/AlarmClock/app/src/main/res/layout/fragment_set_alarm.xml" value="0.19270833333333334" />
+        <entry key="..\:/KOTLIN PROJECT/AlarmClock/app/src/main/res/layout/item_alarm.xml" value="0.25416666666666665" />
         <entry key="..\:/KOTLIN PROJECT/AlarmClock/app/src/main/res/menu/menu_main.xml" value="0.25416666666666665" />
       </map>
     </option>

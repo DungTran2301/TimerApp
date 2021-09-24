@@ -10,12 +10,14 @@
         android:id="@+id/rcv_alarms"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_alarm"
@@ -36,24 +38,29 @@
         android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/no_color"
+        android:weightSum="2"
         app:layout_constraintBottom_toBottomOf="@+id/rcv_alarms"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
         <Button
             android:id="@+id/btn_cancel_delete"
             app:backgroundTint="#BF000000"
-            android:background="@drawable/ic_baseline_cancel_24"
+            android:background="@drawable/ic_baseline_close_24"
+            android:layout_marginStart="20dp"
             android:layout_width="40dp"
-            android:layout_height="40dp"/>
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp" />
+
         <Button
             android:id="@+id/btn_delete"
-            android:layout_marginStart="120dp"
+            android:layout_width="35dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_baseline_delete_24"
             android:gravity="center_horizontal"
-            android:background="@drawable/ic_baseline_delete_forever_24"
+            android:layout_marginStart="125dp"
             app:backgroundTint="#BF000000"
-            android:layout_width="wrap_content"
-            android:layout_height="75dp"
-            android:layout_marginLeft="120dp" />
+            android:layout_marginLeft="20dp" />
     </LinearLayout>
 
 

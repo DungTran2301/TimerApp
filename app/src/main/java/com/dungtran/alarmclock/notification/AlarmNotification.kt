@@ -7,18 +7,17 @@ import android.app.NotificationManager
 import android.os.Build
 
 class AlarmNotification : Application() {
-    companion object {
-        val ALARM_CHANNEL_ID: String = "ALARM_CHANEL_ID"
-    }
+
+    val ALARM_CHANNEL_ID: String = "ALARM_CHANNEL_ID"
 
     override fun onCreate() {
         super.onCreate()
-
+        createNotificationChannel()
     }
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            var serviceChannel = NotificationChannel (
+            val serviceChannel = NotificationChannel (
                 ALARM_CHANNEL_ID,
                 "Alarm service channel",
                 NotificationManager.IMPORTANCE_DEFAULT

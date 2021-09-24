@@ -41,22 +41,29 @@ class AlarmFragment : Fragment() {
         binding.fabAddAlarm.setOnClickListener {
             moveToAddAlarm()
         }
-        val adapter = AlarmAdapter({ _, position ->
-            alarmViewModel.position = position
+
+        val adapter = AlarmAdapter({
+            alarmViewModel.position = it
             findNavController().navigate(R.id.action_action_alarms_to_setAlarmFragment)
         },{
             deleteAlarm(position = it)
+        },{
+            changeStatus(position = it)
         })
+
         alarmViewModel.allData.observe(viewLifecycleOwner){
             Log.d("Alarm Fragment", "Size of list Alarm ${it.size}")
             adapter.listAlarms = it
         }
+
         binding.rcvAlarms.adapter = adapter
     }
+
     private fun moveToAddAlarm () {
         alarmViewModel.position = -1
         findNavController().navigate(R.id.action_action_alarms_to_setAlarmFragment)
     }
+
     private fun deleteAlarm(position: Int){
         Log.d("AlarmFragment", "Delete Alarm at $position")
         binding.layoutDelete.visibility = View.VISIBLE
@@ -72,6 +79,13 @@ class AlarmFragment : Fragment() {
 
     }
 
-
+    private fun changeStatus(position: Int) {
+        val alarm = alarmViewModel.allData.value?.get(position)!!
+        alarm.isStart = !alarm.isStart
+        Log.d("Alarm Fragment", "${alarm.hours}:${alarm.minutes} - change status")
+        lifecycleScope.launch(Dispatchers.IO) {
+            alarmViewModel.updateAlarm(alarm)
+        }
+    }
 
 }

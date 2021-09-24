@@ -4,14 +4,16 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import com.dungtran.alarmclock.service.AlarmService
 import com.dungtran.alarmclock.service.RescheduleAlarmService
 import java.util.*
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
+        Log.d("Alarm receiver", "onReceive: Khoi chay receiver")
         if (Intent.ACTION_BOOT_COMPLETED == intent.action) {
-            startRescheduleAlarmsService(context)
+            startRescheduleAlarmsService(context, intent)
         }
         else {
             if (intent.getBooleanExtra("ISRECURRENCE",  false)) {
@@ -71,8 +73,12 @@ class AlarmReceiver : BroadcastReceiver() {
         return false
     }
 
-    private fun startRescheduleAlarmsService(context: Context) {
-        val intentService = Intent(context, AlarmService::class.java)
+    private fun startRescheduleAlarmsService(context: Context, intent: Intent) {
+        val intentService = Intent(context, RescheduleAlarmService::class.java)
+        intentService.putExtra("DISMISS", false)
+        intentService.putExtra("HOUR", intent.getIntExtra("HOURS", 0))
+        intentService.putExtra("MINUTE", intent.getIntExtra("MINUTES", 0))
+        Log.d("Alarm receiver", "startRescheduleAlarmsService: bat dau service alarm")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             context.startForegroundService(intentService)
         else
@@ -80,7 +86,11 @@ class AlarmReceiver : BroadcastReceiver() {
     }
 
     private fun startAlarmService(context: Context, intent: Intent) {
-        val intentService = Intent(context, RescheduleAlarmService::class.java)
+        val intentService = Intent(context, AlarmService::class.java)
+        intentService.putExtra("DISMISS", false)
+        intentService.putExtra("HOUR", intent.getIntExtra("HOURS", 0))
+        intentService.putExtra("MINUTE", intent.getIntExtra("MINUTES", 0))
+        Log.d("Alarm receiver", "startAlarmsService: bat dau service alarm")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             context.startForegroundService(intentService)
         else

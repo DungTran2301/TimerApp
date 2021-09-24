@@ -19,15 +19,10 @@ class AlarmViewModel(private var alarmRepository: AlarmRepository) : ViewModel()
 
     var position = 0
 
-
-    suspend fun update(newAlarm :Alarm){
-//        _allData.value?.get(position) = newAlarm
-        updateAlarm(newAlarm)
-    }
-
     suspend fun updateAlarm(alarm: Alarm) {
-        Log.d("Alarm ViewModel ", "updateAlarm")
-        alarmRepository.updateAlarm(alarm)
+        viewModelScope.launch(Dispatchers.IO) {
+            alarmRepository.updateAlarm(alarm)
+        }
     }
 
     suspend fun insertAlarm(alarm: Alarm) {
@@ -35,6 +30,11 @@ class AlarmViewModel(private var alarmRepository: AlarmRepository) : ViewModel()
     }
     suspend fun deleteAlarm(position: Int){
         allData.value?.get(position)?.let { alarmRepository.deleteAlarm(it) }
+    }
+
+
+    fun getAlarmByID(position: Int): Alarm {
+        return allData.value?.get(position)!!
     }
 
     init {

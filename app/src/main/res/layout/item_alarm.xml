@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="6dp"
     app:cardElevation="6dp"
-    android:layout_margin="8dp">
+    android:layout_margin="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,10 +27,10 @@
 
         <TextView
             android:id="@+id/tv_item_calender"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="140dp"
+            android:layout_marginLeft="100dp"
             android:text="T.6, 17 Th9"
             android:textColor="@color/gray"/>
 

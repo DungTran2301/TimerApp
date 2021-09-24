@@ -2,6 +2,7 @@ package com.dungtran.alarmclock.alarmdata
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import androidx.room.OnConflictStrategy.REPLACE
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -15,6 +16,6 @@ interface AlarmDAO {
     @Delete
     suspend fun deleteAlarm(alarm: Alarm)
 
-    @Update
+    @Update(onConflict = REPLACE)
     suspend fun updateAlarm(alarm: Alarm)
 }

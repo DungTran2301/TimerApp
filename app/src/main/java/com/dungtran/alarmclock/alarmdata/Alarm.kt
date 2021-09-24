@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.room.Entity
 import androidx.room.Ignore
@@ -47,6 +48,9 @@ class Alarm {
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     fun alarmSchedule(context: Context) {
+
+        Log.d("Alarm", "Start alarm Schedule")
+
         val intent = Intent(context, AlarmReceiver::class.java)
         intent.putExtra("HOURS", hours)
         intent.putExtra("MINUTES", minutes)
@@ -74,6 +78,7 @@ class Alarm {
             calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1)
             isToday = false
         }
+        else isToday = true
 
         if (!isRecurrence) {
             alarmManager.setExact(
@@ -97,6 +102,8 @@ class Alarm {
     fun cancelAlarm(context: Context) {
         val alarmManager: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java)
+        intent.putExtra("HOUR", hours)
+        intent.putExtra("MINUTE", minutes)
         val alarmPendingIntent = PendingIntent.getBroadcast(context, alarmId, intent, 0)
         alarmManager.cancel(alarmPendingIntent)
         this.isStart = false
@@ -105,9 +112,14 @@ class Alarm {
     fun getRecurrenceText(): String {
         var res = ""
         if (!isRecurrence) {
-            if (isToday)
-                res = "Hôm nay"
-            else res = "Ngày mai"
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = System.currentTimeMillis()
+            calendar.set(Calendar.HOUR_OF_DAY, hours)
+            calendar.set(Calendar.MINUTE, minutes)
+
+            isToday = calendar.timeInMillis > System.currentTimeMillis()
+
+            res = if (isToday) "Hôm nay" else "Ngày mai"
         }
         else {
             if (monday)

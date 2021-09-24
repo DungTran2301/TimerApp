@@ -29,8 +29,14 @@
         </activity>
 
         <service android:name=".service.CountDownService" />
-
+        <service android:name=".service.AlarmService"/>
+        <service android:name=".service.RescheduleAlarmService"/>
         <receiver android:name=".broadcastreceiver.NotificationReceive" />
+        <receiver android:name=".broadcastreceiver.AlarmReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

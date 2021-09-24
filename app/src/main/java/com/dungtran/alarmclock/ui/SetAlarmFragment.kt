@@ -39,9 +39,16 @@ class SetAlarmFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.tpkGetAlarmTime.setIs24HourView(true)
+
         binding.btnRecurring.setOnClickListener {
             onRecurringClick()
         }
+
+        if (viewModel.position != -1) {
+            setInformationForView()
+        }
+
 
         binding.btnExitSetAlarm.setOnClickListener {
             Log.d("SetAlarmFragment: ", "cn button exit click")
@@ -62,23 +69,14 @@ class SetAlarmFragment : Fragment() {
                     addAlarm()
             }
             else {
-                val updateAlarm = viewModel.allData.value!![viewModel.position]
-
-                    binding.tvDisplayTime.text = updateAlarm.getRecurrenceText()
-                    isRecurring = !updateAlarm.isRecurrence
-                    if (updateAlarm.isRecurrence) {
-                        binding.cbMon.isChecked = updateAlarm.monday
-                        binding.cbTue.isChecked = updateAlarm.tuesday
-                        binding.cbWed.isChecked = updateAlarm.wednesday
-                        binding.cbThu.isChecked = updateAlarm.thursday
-                        binding.cbFri.isChecked = updateAlarm.friday
-                        binding.cbSat.isChecked = updateAlarm.saturday
-                        binding.cbSun.isChecked = updateAlarm.sunday
-                    }
                 lifecycleScope.launch(Dispatchers.IO){
-                    viewModel.updateAlarm(updateAlarm)
+                    val alarm = viewModel.allData.value!!.get(viewModel.position)
+                    val alarmUpdated = setUpdateAlarm(alarm)
+                    Log.d("Set alarm fragment", "${alarm.hours} - ${alarm.minutes}")
+                    viewModel.updateAlarm(alarmUpdated)
                 }
             }
+
             findNavController().navigate(R.id.action_setAlarmFragment_to_action_alarms)
 
         }
@@ -112,27 +110,73 @@ class SetAlarmFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun addAlarm() {
-        var alarm = Alarm(
-                binding.tpkGetAlarmTime.hour,
-                binding.tpkGetAlarmTime.minute,
-                true,
-                isRecurring,
-                binding.cbMon.isChecked,
-                binding.cbTue.isChecked,
-                binding.cbWed.isChecked,
-                binding.cbThu.isChecked,
-                binding.cbFri.isChecked,
-                binding.cbSat.isChecked,
-                binding.cbSun.isChecked
-        )
+        var alarm = getInformation()
         lifecycleScope.launch(Dispatchers.IO) {
             viewModel.insertAlarm(alarm)
         }
 
         lifecycleScope.launch(Dispatchers.Default){
+            Log.d("Set Alarm fragment", "add - schedule alarm")
             alarm.alarmSchedule(requireContext())
         }
 
 
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun getInformation(): Alarm {
+        return Alarm(
+            binding.tpkGetAlarmTime.hour,
+            binding.tpkGetAlarmTime.minute,
+            true,
+            isRecurring,
+            binding.cbMon.isChecked,
+            binding.cbTue.isChecked,
+            binding.cbWed.isChecked,
+            binding.cbThu.isChecked,
+            binding.cbFri.isChecked,
+            binding.cbSat.isChecked,
+            binding.cbSun.isChecked
+        )
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun setUpdateAlarm(alarm: Alarm): Alarm {
+        alarm.hours = binding.tpkGetAlarmTime.hour
+        alarm.minutes = binding.tpkGetAlarmTime.minute
+        alarm.isRecurrence = isRecurring
+        alarm.monday = binding.cbMon.isChecked
+        alarm.tuesday = binding.cbTue.isChecked
+        alarm.wednesday = binding.cbWed.isChecked
+        alarm.thursday = binding.cbThu.isChecked
+        alarm.friday = binding.cbFri.isChecked
+        alarm.saturday = binding.cbSat.isChecked
+        alarm.sunday = binding.cbSun.isChecked
+
+        lifecycleScope.launch(Dispatchers.Default){
+            alarm.alarmSchedule(requireContext())
+        }
+        return alarm
+    }
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun setInformationForView() {
+        val updateAlarm = viewModel.allData.value!![viewModel.position]
+
+        binding.tpkGetAlarmTime.hour = updateAlarm.hours
+        binding.tpkGetAlarmTime.minute = updateAlarm.minutes
+        binding.tvDisplayTime.text = updateAlarm.getRecurrenceText()
+        isRecurring = updateAlarm.isRecurrence
+        if (updateAlarm.isRecurrence) {
+            binding.cbMon.isChecked = updateAlarm.monday
+            binding.cbTue.isChecked = updateAlarm.tuesday
+            binding.cbWed.isChecked = updateAlarm.wednesday
+            binding.cbThu.isChecked = updateAlarm.thursday
+            binding.cbFri.isChecked = updateAlarm.friday
+            binding.cbSat.isChecked = updateAlarm.saturday
+            binding.cbSun.isChecked = updateAlarm.sunday
+            binding.btnRecurring.text = "Không lặp"
+            binding.btnRecurring.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+            binding.lnlCheckboxDay.visibility = View.VISIBLE
+        }
     }
 }
