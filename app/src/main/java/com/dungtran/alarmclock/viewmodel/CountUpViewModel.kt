@@ -1,12 +1,9 @@
-package com.dungtran.alarmclock.model
+package com.dungtran.alarmclock.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.util.*
-import kotlin.concurrent.thread
-import kotlin.math.roundToInt
 
 class CountUpViewModel : ViewModel() {
     private var time = 0.0

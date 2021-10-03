@@ -10,18 +10,23 @@ import com.dungtran.alarmclock.service.RescheduleAlarmService
 import java.util.*
 
 class AlarmReceiver : BroadcastReceiver() {
+    private var isOff: Boolean = false
     override fun onReceive(context: Context, intent: Intent) {
+        isOff = intent.getBooleanExtra("OFF", false)
         Log.d("Alarm receiver", "onReceive: Khoi chay receiver")
-        if (Intent.ACTION_BOOT_COMPLETED == intent.action) {
+        if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             startRescheduleAlarmsService(context, intent)
         }
         else {
             if (intent.getBooleanExtra("ISRECURRENCE",  false)) {
+                Log.d("Alarm receiver", "onReceive: báo thức lặp lại đã vào")
                 if (hasAlarmToday(intent)) {
+                    Log.d("Alarm receiver", "onReceive: Hôm nay có báo thức")
                     startAlarmService(context, intent)
                 }
             }
             else {
+                Log.d("Alarm receiver", "onReceive: báo thức KO lặp lại đã vào")
                startAlarmService(context, intent)
             }
         }
@@ -30,54 +35,35 @@ class AlarmReceiver : BroadcastReceiver() {
     private fun hasAlarmToday(intent: Intent): Boolean {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = System.currentTimeMillis()
-        val today = calendar.get(Calendar.DAY_OF_WEEK)
 
-        when (today) {
+        when (calendar.get(Calendar.DAY_OF_WEEK)) {
             Calendar.MONDAY -> {
-                if (intent.getBooleanExtra("MONDAY", false))
-                    return true
-                return false
+                return intent.getBooleanExtra("MONDAY", false)
             }
             Calendar.TUESDAY -> {
-                if (intent.getBooleanExtra("TUESDAY", false))
-                    return true
-                return false
+                return intent.getBooleanExtra("TUESDAY", false)
             }
             Calendar.WEDNESDAY -> {
-                if (intent.getBooleanExtra("WEDNESDAY", false))
-                    return true
-                return false
+                return intent.getBooleanExtra("WEDNESDAY", false)
             }
             Calendar.THURSDAY -> {
-                if (intent.getBooleanExtra("THURSDAY", false))
-                    return true
-                return false
+                return intent.getBooleanExtra("THURSDAY", false)
             }
             Calendar.FRIDAY -> {
-                if (intent.getBooleanExtra("FRIDAY", false))
-                    return true
-                return false
+                return intent.getBooleanExtra("FRIDAY", false)
             }
             Calendar.SATURDAY -> {
-                if (intent.getBooleanExtra("SATURDAY", false))
-                    return true
-                return false
+                return intent.getBooleanExtra("SATURDAY", false)
             }
             Calendar.SUNDAY -> {
-                if (intent.getBooleanExtra("SUNDAY", false))
-                    return true
-                return false
+                return intent.getBooleanExtra("SUNDAY", false)
             }
-
         }
         return false
     }
 
     private fun startRescheduleAlarmsService(context: Context, intent: Intent) {
         val intentService = Intent(context, RescheduleAlarmService::class.java)
-        intentService.putExtra("DISMISS", false)
-        intentService.putExtra("HOUR", intent.getIntExtra("HOURS", 0))
-        intentService.putExtra("MINUTE", intent.getIntExtra("MINUTES", 0))
         Log.d("Alarm receiver", "startRescheduleAlarmsService: bat dau service alarm")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             context.startForegroundService(intentService)
@@ -87,7 +73,8 @@ class AlarmReceiver : BroadcastReceiver() {
 
     private fun startAlarmService(context: Context, intent: Intent) {
         val intentService = Intent(context, AlarmService::class.java)
-        intentService.putExtra("DISMISS", false)
+        intentService.putExtra("OFF", isOff)
+        intentService.putExtra("ID", intent.getIntExtra("ID",-1))
         intentService.putExtra("HOUR", intent.getIntExtra("HOURS", 0))
         intentService.putExtra("MINUTE", intent.getIntExtra("MINUTES", 0))
         Log.d("Alarm receiver", "startAlarmsService: bat dau service alarm")

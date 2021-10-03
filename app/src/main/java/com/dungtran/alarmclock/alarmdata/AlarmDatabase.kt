@@ -20,6 +20,7 @@ abstract class AlarmDatabase : RoomDatabase() {
                     context.applicationContext,
                     AlarmDatabase::class.java,
                     NAME_DATABASE)
+                    .fallbackToDestructiveMigration()
                     .build()
 
                 INSTANCE = instance

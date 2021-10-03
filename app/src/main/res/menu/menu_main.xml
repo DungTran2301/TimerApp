@@ -5,14 +5,16 @@
     <item
         android:id="@+id/action_alarms"
         android:title="@string/action_alarms"
+        android:icon="@drawable/ic_access_alarm_24"
         android:enabled="true"/>
     <item
         android:id="@+id/action_count_up"
         android:title="@string/action_count_up"
+        android:icon="@drawable/ic_timer_24"
         android:enabled="true"/>
     <item
         android:id="@+id/action_count_down"
         android:title="@string/action_count_down"
+        android:icon="@drawable/ic_hourglass_24"
         android:enabled="true"/>
-
 </menu>

@@ -1,7 +1,8 @@
-package com.dungtran.alarmclock.model
+package com.dungtran.alarmclock.viewmodel
 
 import android.app.Application
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,6 +14,8 @@ class CountDownViewModel(application: Application) : AndroidViewModel(applicatio
     private var timer = Timer()
     private var timerTask: TimerTask? = null
     private var time = 0.0
+//    private var _isCounting = false
+    var isCounting = false
 
     private val context by lazy {
         application.applicationContext
@@ -37,7 +40,8 @@ class CountDownViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     private fun getTimerText() {
-        if(time <= 0) {
+        if(time <= 0 && isCounting) {
+            isCounting = false
             taskComplete()
             createService()
         }
@@ -59,6 +63,7 @@ class CountDownViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun taskComplete() {
+        Log.d("Count view model", "taskComplete: stop timer task")
         timerTask!!.cancel()
     }
 

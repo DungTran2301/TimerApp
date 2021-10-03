@@ -17,8 +17,8 @@ import androidx.navigation.fragment.findNavController
 import com.dungtran.alarmclock.R
 import com.dungtran.alarmclock.alarmdata.Alarm
 import com.dungtran.alarmclock.databinding.FragmentSetAlarmBinding
-import com.dungtran.alarmclock.model.AlarmLiveDataFactory
-import com.dungtran.alarmclock.model.AlarmViewModel
+import com.dungtran.alarmclock.viewmodel.AlarmLiveDataFactory
+import com.dungtran.alarmclock.viewmodel.AlarmViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -45,10 +45,9 @@ class SetAlarmFragment : Fragment() {
             onRecurringClick()
         }
 
-        if (viewModel.position != -1) {
+        if (viewModel.hostAlarm != null){
             setInformationForView()
         }
-
 
         binding.btnExitSetAlarm.setOnClickListener {
             Log.d("SetAlarmFragment: ", "cn button exit click")
@@ -58,7 +57,7 @@ class SetAlarmFragment : Fragment() {
         binding.btnSaveSetAlarm.setOnClickListener {
 
             Log.d("set alarm fragment: ", "save click")
-            if (viewModel.position == -1) {
+            if (viewModel.hostAlarm == null) {
                 Log.d("set alarm fragment: ", "save new alarm")
                 if (isRecurring) {
                     if (!checkRecurrence()) {
@@ -70,7 +69,7 @@ class SetAlarmFragment : Fragment() {
             }
             else {
                 lifecycleScope.launch(Dispatchers.IO){
-                    val alarm = viewModel.allData.value!!.get(viewModel.position)
+                    val alarm = viewModel.hostAlarm!!
                     val alarmUpdated = setUpdateAlarm(alarm)
                     Log.d("Set alarm fragment", "${alarm.hours} - ${alarm.minutes}")
                     viewModel.updateAlarm(alarmUpdated)
@@ -110,7 +109,7 @@ class SetAlarmFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun addAlarm() {
-        var alarm = getInformation()
+        val alarm = getInformation()
         lifecycleScope.launch(Dispatchers.IO) {
             viewModel.insertAlarm(alarm)
         }
@@ -119,8 +118,6 @@ class SetAlarmFragment : Fragment() {
             Log.d("Set Alarm fragment", "add - schedule alarm")
             alarm.alarmSchedule(requireContext())
         }
-
-
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -160,8 +157,9 @@ class SetAlarmFragment : Fragment() {
     }
     @RequiresApi(Build.VERSION_CODES.M)
     private fun setInformationForView() {
-        val updateAlarm = viewModel.allData.value!![viewModel.position]
+        val updateAlarm = viewModel.hostAlarm!!
 
+        binding.tvDisplayTime.text = viewModel.hostAlarm!!.getRecurrenceText()
         binding.tpkGetAlarmTime.hour = updateAlarm.hours
         binding.tpkGetAlarmTime.minute = updateAlarm.minutes
         binding.tvDisplayTime.text = updateAlarm.getRecurrenceText()

@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.dungtran.alarmclock.R
 import com.dungtran.alarmclock.broadcastreceiver.NotificationReceive
@@ -28,7 +29,7 @@ import com.dungtran.alarmclock.notification.CountDownNotification
                 stopSelf()
             }
         }
-        var stringNotification = "Đếm ngược"
+        val stringNotification = "Đếm ngược"
         sendNotification(stringNotification)
         return START_NOT_STICKY
 
@@ -38,6 +39,8 @@ import com.dungtran.alarmclock.notification.CountDownNotification
     private fun sendNotification(stringNotification: String) {
         val broadcastIntent = Intent(this, NotificationReceive::class.java)
         broadcastIntent.putExtra("exit", 1)
+
+        Log.d("Count service", "taskComplete: send notification")
 
         val actionIntent = PendingIntent.getBroadcast(this,
         0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT)

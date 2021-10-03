@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.dungtran.alarmclock.R
 import com.dungtran.alarmclock.databinding.FragmentCountUpBinding
-import com.dungtran.alarmclock.model.CountUpViewModel
+import com.dungtran.alarmclock.viewmodel.CountUpViewModel
 
 
 class CountUpFragment : Fragment() {

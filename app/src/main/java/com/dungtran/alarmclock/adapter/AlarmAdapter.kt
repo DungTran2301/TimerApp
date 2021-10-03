@@ -1,61 +1,51 @@
 package com.dungtran.alarmclock.adapter
 
 import android.annotation.SuppressLint
-import android.util.Log
+import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.dungtran.alarmclock.R
 import com.dungtran.alarmclock.alarmdata.Alarm
 import com.dungtran.alarmclock.databinding.ItemAlarmBinding
 
 class AlarmAdapter(
-        private val clickListener: (position: Int) -> Unit,
-        private val deleteAlarm: (position: Int) -> Unit,
-        private val changeStatus: (position: Int) -> Unit
+    private val clickListener: (alarm: Alarm) -> Unit,
+    private val deleteAlarm: (alarm: Alarm) -> Unit,
+    private val changeStatus: (alarm: Alarm) -> Unit,
+    val context: Context
 ) : RecyclerView.Adapter<AlarmAdapter.ViewHolder>() {
 
-    inner class ViewHolder(private val binding: ItemAlarmBinding) : RecyclerView.ViewHolder(binding.root){
+//    var listAlarms: List<Alarm> = mutableListOf()
+    var listAlarms: List<Alarm> = listOf()
+        @SuppressLint("NotifyDataSetChanged")
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
+    inner class ViewHolder(private val binding: ItemAlarmBinding) : RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n", "ResourceAsColor")
-        fun bind(position: Int){
-            val alarm = listAlarms[position]
+        fun bind(alarm: Alarm){
             val hourString = String.format("%02d", alarm.hours)
             val minuteString = String.format("%02d", alarm.minutes)
             binding.tvItemAlarmTime.text = "$hourString:$minuteString"
             binding.tvItemCalender.text = alarm.getRecurrenceText()
             binding.switchItemAlarmStarted.isChecked = alarm.isStart
+
             binding.root.setOnClickListener {
-                clickListener(position)
+                clickListener(alarm)
             }
+
             binding.root.setOnLongClickListener {
-                deleteAlarm(position)
+                deleteAlarm(alarm)
                 true
             }
 
-//            binding.switchItemAlarmStarted.setOnCheckedChangeListener { _, _ ->
-//                changeStatus(position)
-//            }
-        }
-
-        fun changeItemStatus(position: Int) {
             binding.switchItemAlarmStarted.setOnCheckedChangeListener { _, _ ->
-                changeStatus(position)
+                changeStatus(alarm)
             }
-            notifyItemChanged(position)
         }
-
     }
-//    interface OnAlarmItemClicklistener {
-//        fun OnItemClick(item: Alarm, position: Int)
-//    }
-    var listAlarms: List<Alarm> = listOf()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemAlarmBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -63,12 +53,10 @@ class AlarmAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(position)
-//        notifyItemChanged(position)
+        holder.bind(listAlarms[position])
     }
 
     override fun getItemCount(): Int = listAlarms.size
-
 
 }
 

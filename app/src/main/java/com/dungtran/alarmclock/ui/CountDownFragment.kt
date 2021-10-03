@@ -11,12 +11,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.dungtran.alarmclock.R
 import com.dungtran.alarmclock.databinding.FragmentCountDownBinding
-import com.dungtran.alarmclock.model.CountDownViewModel
+import com.dungtran.alarmclock.viewmodel.CountDownViewModel
 import com.google.android.material.snackbar.Snackbar
 
 class CountDownFragment : Fragment() {
     lateinit var binding: FragmentCountDownBinding
-    private var isCounting = false
+//    private var isCounting = false
 
     lateinit var countDownViewModel: CountDownViewModel
 
@@ -32,6 +32,10 @@ class CountDownFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         countDownViewModel = ViewModelProvider(requireActivity()).get(CountDownViewModel::class.java)
+
+        if (countDownViewModel.isCounting) {
+            continueCounting()
+        }
 
         countDownViewModel.timeDisplay.observe(viewLifecycleOwner, androidx.lifecycle.Observer{
             binding.tvTimeRunning.text = it
@@ -80,9 +84,19 @@ class CountDownFragment : Fragment() {
         stopContinueTapped()
     }
 
+    private fun continueCounting() {
+        binding.btnStartCountDown.visibility = View.GONE
+        binding.btnExit.visibility = View.VISIBLE
+        binding.btnStopAndContinueCountDown.visibility = View.VISIBLE
+        binding.timePicker.visibility  = View.GONE
+        binding.tvTimeRunning.visibility = View.VISIBLE
+//        countDownViewModel.isCounting = false
+//        stopContinueTapped()
+    }
+
     private fun exitTimer() {
         countDownViewModel.resetTime()
-        isCounting = false
+        countDownViewModel.isCounting = false
         countDownViewModel.setTime(0, 0, 0)
         binding.btnStartCountDown.visibility = View.VISIBLE
         binding.btnExit.visibility = View.GONE
@@ -92,14 +106,14 @@ class CountDownFragment : Fragment() {
     }
 
     private fun stopContinueTapped() {
-        if (isCounting) {
-            isCounting = false
+        if (countDownViewModel.isCounting) {
+            countDownViewModel.isCounting = false
             binding.btnStopAndContinueCountDown.text = "tiếp tục"
             binding.btnStopAndContinueCountDown.setTextColor(ContextCompat.getColor(requireContext(), R.color.green_light))
             countDownViewModel.taskComplete()
         }
         else {
-            isCounting = true
+            countDownViewModel.isCounting = true
             binding.btnStopAndContinueCountDown.text = "dừng"
             binding.btnStopAndContinueCountDown.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
             countDownViewModel.startTimer()
