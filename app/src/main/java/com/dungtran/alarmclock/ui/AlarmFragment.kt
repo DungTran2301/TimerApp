@@ -13,6 +13,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.dungtran.alarmclock.R
 import com.dungtran.alarmclock.adapter.AlarmAdapter
 import com.dungtran.alarmclock.alarmdata.Alarm
@@ -26,8 +27,7 @@ import kotlinx.coroutines.launch
 class AlarmFragment : Fragment() {
     lateinit var binding: FragmentAlarmBinding
     private val alarmViewModel: AlarmViewModel by viewModels { AlarmLiveDataFactory(requireContext()) }
-
-
+    var d = 1
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,7 +36,7 @@ class AlarmFragment : Fragment() {
         return binding.root
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+    @SuppressLint("NotifyDataSetChanged", "UseRequireInsteadOfGet")
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -46,33 +46,22 @@ class AlarmFragment : Fragment() {
         }
 
         val adapter = AlarmAdapter({
+            activity?.let { ctx->
+                changeStatus(alarm = it, ctx)
+            }
+        },
+            {
             alarmViewModel.hostAlarm = it
             findNavController().navigate(R.id.action_action_alarms_to_setAlarmFragment)
         },{
-            context?.let { it1 ->
-                deleteAlarm(alarm = it, it1)
+            activity?.let { ctx ->
+                deleteAlarm(alarm = it, ctx)
             }
+        }, activity!!)
 
-        }, {
-//            context?.let { it1 ->
-//                alarmViewModel.changeStatus(it, it1)
-//            }
-            if (it.isStart) {
-                context?.let { ctx ->
-                    it.cancelAlarm(ctx)
-                    alarmViewModel.updateAlarm(it)
-                }
-            } else {
-                context?.let { ctx ->
-                    it.alarmSchedule(ctx)
-                    alarmViewModel.updateAlarm(it)
-                }
-            }
+        alarmViewModel.allData.observe(viewLifecycleOwner) {
+//            Log.d("Alarm Fragment", "Size of list Alarm ${it.size}")
 
-        }, requireContext())
-
-        alarmViewModel.allData.observe(viewLifecycleOwner){
-            Log.d("Alarm Fragment", "Size of list Alarm ${it.size}")
             adapter.listAlarms = it
             adapter.notifyDataSetChanged()
         }
@@ -98,12 +87,16 @@ class AlarmFragment : Fragment() {
         }
     }
 
-//    private fun changeStatus(alarm: Alarm, context: Context) {
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    private fun changeStatus(alarm: Alarm, context: Context) {
 //        alarm.isStart = !alarm.isStart
-//        Log.d("Alarm Fragment", "${alarm.hours}:${alarm.minutes} - change status")
-//        lifecycleScope.launch(Dispatchers.IO) {
-//            alarmViewModel.updateAlarm(alarm)
-//        }
-//    }
+        if (alarm.isStart)
+            alarm.cancelAlarm(context)
+        else
+            alarm.alarmSchedule(context)
+        lifecycleScope.launch(Dispatchers.IO) {
+            alarmViewModel.updateAlarm(alarm)
+        }
+    }
 
 }

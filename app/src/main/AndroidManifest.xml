@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:name=".notification.CountDownNotification"
+        android:name=".notification.AppNotification"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:allowBackup="true"
         android:label="@string/app_name"

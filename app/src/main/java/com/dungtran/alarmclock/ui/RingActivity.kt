@@ -40,10 +40,6 @@ class RingActivity : AppCompatActivity() {
             applicationContext.sendBroadcast(intentRing)
             finish()
         }
-
-        binding.btnSnooze.setOnClickListener {
-
-        }
     }
 
 

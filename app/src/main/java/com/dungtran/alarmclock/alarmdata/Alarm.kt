@@ -15,7 +15,7 @@ import android.content.Intent as Intent
 
 @Entity(tableName = "alarm_table")
 class Alarm {
-    @PrimaryKey()
+    @PrimaryKey
     var alarmId: Int = 0
     var hours: Int = 0
     var minutes: Int = 0
@@ -30,7 +30,6 @@ class Alarm {
     var sunday = false
     @Ignore
     var isToday = true
-
 
     constructor(hours: Int, minutes: Int, isStart: Boolean, isRecurrence: Boolean, monday: Boolean, tuesday: Boolean, wednesday: Boolean, thursday: Boolean, friday: Boolean, saturday: Boolean, sunday: Boolean) {
         this.alarmId = System.currentTimeMillis().toInt()
@@ -97,15 +96,12 @@ class Alarm {
                     alarmPendingIntent
             )
         }
-
     }
 
     fun cancelAlarm(context: Context) {
         isStart = false
         val alarmManager: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java)
-        intent.putExtra("HOUR", hours)
-        intent.putExtra("MINUTE", minutes)
         val alarmPendingIntent = PendingIntent.getBroadcast(context, alarmId, intent, 0)
         alarmManager.cancel(alarmPendingIntent)
         Log.d("Alarm", "cancelAlarm: success")
@@ -117,7 +113,6 @@ class Alarm {
             calendar.timeInMillis = System.currentTimeMillis()
             calendar.set(Calendar.HOUR_OF_DAY, hours)
             calendar.set(Calendar.MINUTE, minutes)
-
             isToday = calendar.timeInMillis > System.currentTimeMillis()
 
             res = if (isToday) "Hôm nay" else "Ngày mai"

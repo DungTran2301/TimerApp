@@ -15,8 +15,8 @@ interface AlarmDAO {
     @Delete
     suspend fun deleteAlarm(alarm: Alarm)
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateAlarm(alarm: Alarm)
+    @Update//(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateAlarm(vararg alarm: Alarm)
 
     @Query("SELECT * FROM alarm_table WHERE alarmId=:alarmId")
     suspend fun getSingleAlarm(alarmId: Int): Alarm

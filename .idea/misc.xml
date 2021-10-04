@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/3. KOTLIN PROJECT/AlarmClock/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.24635416666666668" />
+        <entry key="..\:/3. KOTLIN PROJECT/AlarmClock/app/src/main/res/layout/activity_ring.xml" value="0.22" />
         <entry key="..\:/3. KOTLIN PROJECT/AlarmClock/app/src/main/res/layout/fragment_alarm.xml" value="0.23020833333333332" />
         <entry key="..\:/3. KOTLIN PROJECT/AlarmClock/app/src/main/res/layout/fragment_count_down.xml" value="0.23020833333333332" />
         <entry key="..\:/3. KOTLIN PROJECT/AlarmClock/app/src/main/res/layout/fragment_set_alarm.xml" value="0.23020833333333332" />

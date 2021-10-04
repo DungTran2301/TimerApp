@@ -24,11 +24,11 @@ class AlarmRepository(private val alarmDAO: AlarmDAO) {
         alarmDAO.deleteAlarm(alarm)
     }
 
-    fun updateAlarm(alarm: Alarm) {
+    suspend fun updateAlarm(alarm: Alarm) {
         Log.d("Alarm Repository", "updateAlarm: in update")
-        CoroutineScope(Dispatchers.IO).launch {
+//        CoroutineScope(Dispatchers.IO).launch {
             alarmDAO.updateAlarm(alarm)
-        }
+//        }
 
     }
 }

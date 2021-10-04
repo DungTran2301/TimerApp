@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="184dp"
+        android:layout_marginTop="196dp"
         android:gravity="center_horizontal"
         android:text="Chuông báo"
         android:textAlignment="center"
@@ -26,7 +26,7 @@
         android:id="@+id/tv_alarm_time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="240dp"
+        android:layout_marginTop="280dp"
         android:gravity="center_horizontal"
         android:text="08:00"
         android:textAlignment="center"
@@ -42,23 +42,12 @@
         android:id="@+id/btn_dismiss"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="108dp"
+        android:backgroundTint="@color/no_color"
         android:text="Bỏ qua"
-        android:backgroundTint="@color/no_color"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_snooze"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btn_snooze" />
-
-    <Button
-        android:id="@+id/btn_snooze"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
-        android:text="Tạm dừng"
-        android:backgroundTint="@color/no_color"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_dismiss"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,7 +9,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.dungtran.alarmclock.R
 import com.dungtran.alarmclock.broadcastreceiver.NotificationReceive
-import com.dungtran.alarmclock.notification.CountDownNotification
+import com.dungtran.alarmclock.notification.AppNotification
 
 
  class CountDownService : Service() {
@@ -45,13 +45,13 @@ import com.dungtran.alarmclock.notification.CountDownNotification
         val actionIntent = PendingIntent.getBroadcast(this,
         0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val notification = NotificationCompat.Builder(this, CountDownNotification.channelId)
+        val notification = NotificationCompat.Builder(this, AppNotification.channelId)
                 .setContentTitle(stringNotification)
                 .setContentText("Đã hết giờ!")
                 .setSmallIcon(R.drawable.ic_baseline_doorbell_24)
                 .addAction(R.mipmap.ic_launcher, "Exit", actionIntent)
                 .setColor(R.color.red)
-                .setAutoCancel(false)
+                .setAutoCancel(true)
                 .build()
         startForeground(1, notification)
     }

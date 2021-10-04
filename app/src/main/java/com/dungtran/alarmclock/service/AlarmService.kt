@@ -1,6 +1,5 @@
 package com.dungtran.alarmclock.service
 
-import android.app.Activity
 import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
@@ -13,8 +12,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.dungtran.alarmclock.R
 import com.dungtran.alarmclock.alarmdata.AlarmDatabase
-import com.dungtran.alarmclock.broadcastreceiver.AlarmReceiver
-import com.dungtran.alarmclock.notification.CountDownNotification
+import com.dungtran.alarmclock.notification.AppNotification
 import com.dungtran.alarmclock.ui.MainActivity
 import com.dungtran.alarmclock.ui.RingActivity
 import kotlinx.coroutines.CoroutineScope
@@ -52,14 +50,15 @@ class AlarmService : Service(){
                 CoroutineScope(Dispatchers.IO).launch {
                     val alarm = alarmDao.getSingleAlarm(id)
                     Log.d("Alarm service", "alarm infor ${alarm}")
-                    if (!alarm.isRecurrence) alarm.isStart = false
+                    if (!alarm.isRecurrence) {
+                        alarm.cancelAlarm(applicationContext)
+                    }
                     alarmDao.updateAlarm(alarm)
                     val intentChangeStatus = Intent(applicationContext, MainActivity::class.java)
                     intentChangeStatus.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     applicationContext.startActivity(intentChangeStatus)
                 }
             }
-
         }
         else {
             sentNotification(intent)
@@ -76,7 +75,7 @@ class AlarmService : Service(){
         notificationIntent.putExtra("ID", intent.getIntExtra("ID", -1))
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         val notification: Notification =
-            NotificationCompat.Builder(this, CountDownNotification.channelId)
+            NotificationCompat.Builder(this, AppNotification.channelId)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContentTitle("Báo thức")
                 .setContentText("Ring Ring")
@@ -85,7 +84,6 @@ class AlarmService : Service(){
                 .setContentIntent(pendingIntent)
                 .build()
         mediaPlayer.start()
-
 
         //        val pattern = longArrayOf(0, 100, 1000)
         //        vibrator.vibrate(pattern, 0)

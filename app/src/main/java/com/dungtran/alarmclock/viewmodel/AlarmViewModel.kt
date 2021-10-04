@@ -12,57 +12,31 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class AlarmViewModel(private var alarmRepository: AlarmRepository) : ViewModel() {
-
-    var allData: LiveData<List<Alarm>> = alarmRepository.getAllData()
+//    private val _allData = MutableLiveData<List<Alarm>>()
+//    var allData: LiveData<List<Alarm>> = _allData.distinctUntilChanged()
+//
+//    init {
+//        _allData.value = alarmRepository.getAllData().value
+//    }
+//    var allData: LiveData<List<Alarm>> = alarmRepository.getAllData()
+    val allData : LiveData<List<Alarm>> = liveData {
+        emitSource(alarmRepository.getAllData())
+    }
     var hostAlarm: Alarm? = null
 
-//    init {
-//        viewModelScope.launch(Dispatchers.IO){
-//            getData()
-//        }
-//    }
-//
-//    private fun getData(){
-//        allData = alarmRepository.getAllData()
-//    }
+
 
     suspend fun insertAlarm(alarm: Alarm) {
         alarmRepository.insertAlarm(alarm)
-//        getData()
     }
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
-    fun changeStatus(alarm: Alarm, context: Context) {
-        Log.d("Alarm Fragment", "${alarm.hours}:${alarm.minutes} - change status")
-        if (alarm.isStart) {
-//            viewModelScope.launch(Dispatchers.Default){
-                Log.d("Alarm view model", "ON -> Off")
-                alarm.cancelAlarm(context)
-                updateAlarm(alarm)
-//            }
-        }
-        else {
-//            viewModelScope.launch(Dispatchers.Default){
-                Log.d("Alarm view model", "Off -> ON")
-                alarm.alarmSchedule(context)
-                updateAlarm(alarm)
-//            }
-        }
-
-    }
-
-    fun updateAlarm(alarm: Alarm) {
-        Log.d("Alarm view model", "updateAlarm: in update")
-//        viewModelScope.launch(Dispatchers.IO) {
-            alarmRepository.updateAlarm(alarm)
-//            getData()
-//        }
+    suspend fun updateAlarm(alarm: Alarm) {
+        alarmRepository.updateAlarm(alarm)
     }
 
     suspend fun deleteAlarm(alarm: Alarm, context: Context){
         alarm.cancelAlarm(context)
         alarmRepository.deleteAlarm(alarm)
-//        getData()
     }
 
     companion object{
