@@ -32,7 +32,7 @@ class Alarm {
     var isToday = true
 
     constructor(hours: Int, minutes: Int, isStart: Boolean, isRecurrence: Boolean, monday: Boolean, tuesday: Boolean, wednesday: Boolean, thursday: Boolean, friday: Boolean, saturday: Boolean, sunday: Boolean) {
-        this.alarmId = System.currentTimeMillis().toInt()
+        this.alarmId = (hours+minutes+System.currentTimeMillis()).hashCode()
         this.hours = hours
         this.minutes = minutes
         this.isStart = isStart

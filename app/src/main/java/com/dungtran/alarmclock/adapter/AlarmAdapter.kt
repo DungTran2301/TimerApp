@@ -25,13 +25,23 @@ class AlarmAdapter(
     var context: Context
 ) : RecyclerView.Adapter<AlarmAdapter.ViewHolder>() {
 
+//    var listAlarms: List<Alarm> = mutableListOf()
     var listAlarms: List<Alarm> = mutableListOf()
-//    var listAlarms: List<Alarm> = listOf()
-//        @SuppressLint("NotifyDataSetChanged")
-//        set(value) {
-//            field = value
+        @SuppressLint("NotifyDataSetChanged")
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
+//    fun updateData(list: List<Alarm>){
+//        if(listAlarms.isEmpty()){
+//            listAlarms = list
 //            notifyDataSetChanged()
+//        }else{
+//            listAlarms = list
 //        }
+//    }
+
 
     inner class ViewHolder(private val binding: ItemAlarmBinding) : RecyclerView.ViewHolder(binding.root) {
         @RequiresApi(Build.VERSION_CODES.KITKAT)

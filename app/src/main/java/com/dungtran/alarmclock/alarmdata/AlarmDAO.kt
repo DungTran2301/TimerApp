@@ -10,7 +10,7 @@ interface AlarmDAO {
     suspend fun insertAlarm(alarm: Alarm)
 
     @Query("SELECT * FROM alarm_table ORDER BY alarmId ASC")
-    fun getAllAlarm(): LiveData<List<Alarm>>
+    suspend fun getAllAlarm(): List<Alarm>
 
     @Delete
     suspend fun deleteAlarm(alarm: Alarm)

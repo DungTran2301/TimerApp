@@ -12,31 +12,42 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class AlarmViewModel(private var alarmRepository: AlarmRepository) : ViewModel() {
-//    private val _allData = MutableLiveData<List<Alarm>>()
-//    var allData: LiveData<List<Alarm>> = _allData.distinctUntilChanged()
+    private val _allData = MutableLiveData<List<Alarm>>()
+    var allData: LiveData<List<Alarm>> = _allData
 //
-//    init {
+    init {
 //        _allData.value = alarmRepository.getAllData().value
-//    }
-//    var allData: LiveData<List<Alarm>> = alarmRepository.getAllData()
-    val allData : LiveData<List<Alarm>> = liveData {
-        emitSource(alarmRepository.getAllData())
+        viewModelScope.launch(Dispatchers.IO) {
+            getData()
+        }
+
     }
+//    var allData: LiveData<List<Alarm>> = alarmRepository.getAllData()
+//    val allData : LiveData<List<Alarm>> = liveData {
+//        emitSource(alarmRepository.getAllData())
+//    }
+
+
+    private suspend fun getData(){
+        _allData.postValue(alarmRepository.getAllData())
+    }
+
     var hostAlarm: Alarm? = null
-
-
 
     suspend fun insertAlarm(alarm: Alarm) {
         alarmRepository.insertAlarm(alarm)
+        getData()
     }
 
     suspend fun updateAlarm(alarm: Alarm) {
         alarmRepository.updateAlarm(alarm)
+
     }
 
     suspend fun deleteAlarm(alarm: Alarm, context: Context){
         alarm.cancelAlarm(context)
         alarmRepository.deleteAlarm(alarm)
+        getData()
     }
 
     companion object{

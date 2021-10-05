@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class AlarmRepository(private val alarmDAO: AlarmDAO) {
 //    var allData: LiveData<List<Alarm>> = alarmDAO.getAllAlarm()
-    fun getAllData(): LiveData<List<Alarm>> = alarmDAO.getAllAlarm()
+    suspend fun getAllData(): List<Alarm> = alarmDAO.getAllAlarm()
 
     suspend fun insertAlarm(alarm: Alarm) {
         alarmDAO.insertAlarm(alarm)

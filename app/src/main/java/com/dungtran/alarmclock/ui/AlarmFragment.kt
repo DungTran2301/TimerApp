@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 class AlarmFragment : Fragment() {
     lateinit var binding: FragmentAlarmBinding
     private val alarmViewModel: AlarmViewModel by viewModels { AlarmLiveDataFactory(requireContext()) }
-    var d = 1
+    lateinit var adapter: AlarmAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -45,7 +45,7 @@ class AlarmFragment : Fragment() {
             moveToAddAlarm()
         }
 
-        val adapter = AlarmAdapter({
+        adapter = AlarmAdapter({
             activity?.let { ctx->
                 changeStatus(alarm = it, ctx)
             }
@@ -60,10 +60,11 @@ class AlarmFragment : Fragment() {
         }, activity!!)
 
         alarmViewModel.allData.observe(viewLifecycleOwner) {
-//            Log.d("Alarm Fragment", "Size of list Alarm ${it.size}")
+            Log.d("Alarm Fragment", "Size of list Alarm ${it.size}")
 
             adapter.listAlarms = it
-            adapter.notifyDataSetChanged()
+
+//            adapter.notifyDataSetChanged()
         }
         binding.rcvAlarms.adapter = adapter
     }
